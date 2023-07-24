@@ -27,7 +27,7 @@ const loginUser = async (input: UserInputInterface) => {
   const data = await apiService.post(`${endpoint}/login`, input);
   const { accessToken } = data;
   authStorageService().setToken(accessToken);
-  return data.user;
+  return data;
 };
 
 // Logout user
@@ -63,13 +63,13 @@ const verifyMfa = async (input: VerifyMfaInputInterface) => {
 
 // Send verify email
 const sendVerifyEmail = async () => {
-  const data = await apiService.post(`${endpoint}/send-verify-mfa`, {});
+  const data = await apiService.post(`${endpoint}/send-verify-email`, {});
   return data;
 };
 
 // Verify email
 const verifyEmail = async (otp: string) => {
-  const data = await apiService.post(`${endpoint}/verify-mfa`, { otp });
+  const data = await apiService.post(`${endpoint}/verify-email`, { otp });
   return data.user;
 };
 

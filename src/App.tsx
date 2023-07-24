@@ -9,8 +9,6 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import NotFound from './pages/NotFound';
 import ForgotPassword from './pages/ForgotPassword';
-import VerifyAccount from './pages/VerifyAccount';
-import EnableMFA from './pages/EnableMFA';
 
 const App = () => {
   const accessToken = authStorageService().getToken();
@@ -19,7 +17,7 @@ const App = () => {
 
   useEffect(() => {
     if (accessToken && !user?.email) {
-      // dispatch(getMe());
+      dispatch(getMe());
     }
   }, [user, dispatch, accessToken]);
 
@@ -28,8 +26,6 @@ const App = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/verify-account" element={<VerifyAccount />} />
-      <Route path="/enable-mfa" element={<EnableMFA />} />
       <Route path="/" element={<Home />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

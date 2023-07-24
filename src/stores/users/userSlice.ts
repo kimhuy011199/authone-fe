@@ -8,7 +8,6 @@ import { UsersInterface } from '../../shared/models/User';
 
 interface UserStoreInterface {
   user: UsersInterface | null;
-  qrCode: string;
   error: string;
   success: string;
   isLoading: boolean;
@@ -17,7 +16,6 @@ interface UserStoreInterface {
 
 const initialState: UserStoreInterface = {
   user: null,
-  qrCode: '',
   error: '',
   success: '',
   isLoading: false,
@@ -166,7 +164,7 @@ export const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.success = userType.LOGIN_USER;
-        state.user = action.payload;
+        state.user = action.payload.user;
       })
       .addCase(loginUser.rejected, (state, action: any) => {
         state.isLoading = false;
@@ -189,10 +187,9 @@ export const userSlice = createSlice({
       .addCase(getQRCode.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getQRCode.fulfilled, (state, action) => {
+      .addCase(getQRCode.fulfilled, (state) => {
         state.isLoading = false;
         state.success = userType.GET_QRCODE;
-        state.qrCode = action.payload;
       })
       .addCase(getQRCode.rejected, (state, action: any) => {
         state.isLoading = false;

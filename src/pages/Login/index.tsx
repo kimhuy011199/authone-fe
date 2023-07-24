@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {
   Flex,
@@ -11,6 +12,7 @@ import {
   Text,
   FormErrorMessage,
   Grid,
+  Image,
 } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -18,8 +20,9 @@ import { useAppDispatch, useAppSelector } from '../../stores/hook';
 import { RootState } from '../../stores';
 import { loginUser } from '../../stores/users/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import { userType } from '../../stores/users/userType';
+import login from '../../assets/login.svg';
+import { useErrorToast } from '../../shared/hooks/useAppToast';
 
 type LoginFormData = {
   email: string;
@@ -28,6 +31,8 @@ type LoginFormData = {
 
 const Login = () => {
   const navigate = useNavigate();
+  const errorToast = useErrorToast();
+  const [mfaToken, setMfaToken] = useState('');
   const { user, isLoading, error, message } = useAppSelector(
     (state: RootState) => state.user
   );
@@ -52,9 +57,25 @@ const Login = () => {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({ resolver: yupResolver(schema) });
 
-  const onSubmit: SubmitHandler<LoginFormData> = (values) => {
-    dispatch(loginUser(values));
+  const onSubmit: SubmitHandler<LoginFormData> = async (values) => {
+    try {
+      const data = await dispatch(loginUser(values)).unwrap();
+      if (data?.mfaToken) {
+        setMfaToken(data.mfaToken);
+      }
+    } catch (error: any) {
+      errorToast({
+        description: error.message,
+      });
+    }
   };
+
+  useEffect(() => {
+    if (mfaToken) {
+      // openModal
+      console.log('mfatoken', mfaToken);
+    }
+  }, [mfaToken]);
 
   useEffect(() => {
     if (user) {
@@ -65,7 +86,11 @@ const Login = () => {
   return (
     <Grid templateColumns="repeat(2, 1fr)" minH={'100vh'}>
       <Stack p={3}>
-        <Stack h={'100%'} bg={'gray.200'} rounded={'lg'}></Stack>
+        <Flex h={'100%'} bg={'gray.100'} rounded={'lg'}>
+          <Flex w={'100%'} maxW={'md'} mx={'auto'}>
+            <Image src={login} alt="login" />
+          </Flex>
+        </Flex>
       </Stack>
       <Flex justify={'center'} direction={'column'} mx={'auto'} gap={3}>
         <Heading fontSize={'4xl'}>Welcome back!</Heading>
@@ -116,11 +141,8 @@ const Login = () => {
               type="submit"
               isLoading={isSubmitting || isLoading}
               loadingText="Submitting"
-              bg={'blue.400'}
-              color={'white'}
-              _hover={{
-                bg: 'blue.500',
-              }}
+              colorScheme={'blue'}
+              variant={'solid'}
             >
               Login
             </Button>

@@ -4,7 +4,11 @@ import Authenticated from './Authenticated';
 import Unauthenticated from './Unauthenticated';
 
 const Home = () => {
-  const { user } = useAppSelector((state: RootState) => state.user);
+  const { user, isLoading } = useAppSelector((state: RootState) => state.user);
+
+  if (isLoading && !user) {
+    return <></>;
+  }
 
   return <>{user?.email ? <Authenticated /> : <Unauthenticated />}</>;
 };

@@ -2,7 +2,7 @@ const ACCESS_TOKEN = 'access_token';
 
 const authStorageService = () => {
   return {
-    setToken: (token?: any) => {
+    setToken: (token?: string) => {
       if (token) {
         localStorage.setItem(ACCESS_TOKEN, token);
       }
