@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {
   Flex,
@@ -11,17 +13,15 @@ import {
   Text,
   FormErrorMessage,
   Grid,
-  Image,
 } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useAppDispatch, useAppSelector } from '../../stores/hook';
 import { RootState } from '../../stores';
 import { registerUser } from '../../stores/users/userSlice';
-import { Link, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import { userType } from '../../stores/users/userType';
 import registerImg from '../../assets/register.svg';
+import AuthenticationSideImage from '../../shared/components/AuthenticationSideImage';
 
 type RegisterFormData = {
   email: string;
@@ -32,12 +32,10 @@ type RegisterFormData = {
 
 const Regsiter = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { user, isLoading, error, message } = useAppSelector(
     (state: RootState) => state.user
   );
-  console.log({ user, isLoading, error, message });
-
-  const dispatch = useAppDispatch();
 
   const schema = yup.object().shape({
     email: yup
@@ -52,7 +50,7 @@ const Regsiter = () => {
     confirmPassword: yup
       .string()
       .oneOf([yup.ref('password'), ''], 'Passwords must match')
-      .required('Confirm Password is required'),
+      .required('Password is required'),
   });
 
   const {
@@ -62,8 +60,10 @@ const Regsiter = () => {
   } = useForm<RegisterFormData>({ resolver: yupResolver(schema) });
 
   const onSubmit: SubmitHandler<RegisterFormData> = (values) => {
-    const { confirmPassword, ...data } = values;
-    dispatch(registerUser(data));
+    try {
+      const { confirmPassword, ...data } = values;
+      dispatch(registerUser(data));
+    } catch (error: any) {}
   };
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const Regsiter = () => {
 
   return (
     <Grid templateColumns="repeat(2, 1fr)" minH={'100vh'}>
-      <Flex justify={'center'} direction={'column'} mx={'auto'} gap={3}>
+      <Flex justify={'center'} direction={'column'} mx={'auto'} gap={2}>
         <Heading fontSize={'4xl'}>Join us for free!</Heading>
         <Text fontSize={'lg'} color={'gray.600'}>
           Create a new AuthOne account to get started 🚀
@@ -105,7 +105,6 @@ const Regsiter = () => {
                 {errors?.email && errors?.email?.message}
               </FormErrorMessage>
             </FormControl>
-
             <FormControl id="name" isInvalid={!!errors?.name}>
               <FormLabel htmlFor="name">Name</FormLabel>
               <Input
@@ -118,7 +117,6 @@ const Regsiter = () => {
                 {errors?.name && errors?.name?.message}
               </FormErrorMessage>
             </FormControl>
-
             <FormControl id="password" isInvalid={!!errors?.password}>
               <FormLabel htmlFor="password">Password</FormLabel>
               <Input
@@ -131,7 +129,6 @@ const Regsiter = () => {
                 {errors?.password && errors?.password?.message}
               </FormErrorMessage>
             </FormControl>
-
             <FormControl id="repassword" isInvalid={!!errors?.confirmPassword}>
               <FormLabel htmlFor="confirmPassword">Confirm password</FormLabel>
               <Input
@@ -144,33 +141,24 @@ const Regsiter = () => {
                 {errors?.confirmPassword && errors?.confirmPassword?.message}
               </FormErrorMessage>
             </FormControl>
-
             <Button
               type="submit"
-              isLoading={isSubmitting || isLoading}
-              loadingText="Submitting"
+              isDisabled={isSubmitting || isLoading}
               colorScheme={'blue'}
               variant={'solid'}
             >
               Register
             </Button>
-
             <Flex textAlign={'center'} justifyContent={'center'} gap={1}>
               <Text>Already have account?</Text>
-              <Text color={'blue.400'} fontWeight={'semibold'}>
+              <Text color={'blue.500'} fontWeight={'medium'}>
                 <Link to={'/login'}>Login</Link>
               </Text>
             </Flex>
           </Stack>
         </form>
       </Flex>
-      <Stack p={3}>
-        <Flex h={'100%'} bg={'gray.100'} rounded={'lg'}>
-          <Flex w={'100%'} maxW={'md'} mx={'auto'}>
-            <Image src={registerImg} alt="register" />
-          </Flex>
-        </Flex>
-      </Stack>
+      <AuthenticationSideImage src={registerImg} alt="register" />
     </Grid>
   );
 };

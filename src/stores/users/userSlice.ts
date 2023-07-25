@@ -50,7 +50,7 @@ export const loginUser = createAsyncThunk(
 export const logout = createAsyncThunk(
   `user/${userType.LOGOUT_USER}`,
   async () => {
-    await userService.logout();
+    userService.logout();
   }
 );
 
@@ -151,6 +151,7 @@ export const userSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.success = userType.REGISTER_USER;
+        state.error = '';
         state.user = action.payload;
       })
       .addCase(registerUser.rejected, (state, action: any) => {
@@ -164,12 +165,18 @@ export const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.success = userType.LOGIN_USER;
+        state.error = '';
         state.user = action.payload.user;
       })
       .addCase(loginUser.rejected, (state, action: any) => {
         state.isLoading = false;
         state.error = userType.LOGIN_USER;
         state.message = action.payload.message;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.isLoading = false;
+        state.success = userType.LOGOUT_USER;
+        state.user = null;
       })
       .addCase(getMe.pending, (state) => {
         state.isLoading = true;

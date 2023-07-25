@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import NotFound from './pages/NotFound';
 import ForgotPassword from './pages/ForgotPassword';
+import SetupMfa from './pages/SetupMfa';
 
 const App = () => {
   const accessToken = authStorageService().getToken();
@@ -26,6 +27,7 @@ const App = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/setup-mfa" element={<SetupMfa />} />
       <Route path="/" element={<Home />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
