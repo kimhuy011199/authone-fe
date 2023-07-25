@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -28,7 +27,6 @@ const ChangePasswordForm = (props: ChangePasswordFormProps) => {
   const { onClose } = props;
   const errorToast = useErrorToast();
   const successToast = useSuccessToast();
-  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
 
   const schema = yup.object().shape({
@@ -117,7 +115,7 @@ const ChangePasswordForm = (props: ChangePasswordFormProps) => {
           <Button onClick={handleCancel}>Cancel</Button>
           <Button
             type="submit"
-            isDisabled={isSubmitting || isLoading}
+            isDisabled={isSubmitting}
             loadingText="Register"
             colorScheme={'blue'}
             variant={'solid'}

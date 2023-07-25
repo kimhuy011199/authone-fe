@@ -146,7 +146,7 @@ const Login = () => {
               </Text>
               <Button
                 type="submit"
-                isDisabled={isSubmitting || isLoading}
+                isDisabled={isSubmitting}
                 colorScheme={'blue'}
                 variant={'solid'}
               >

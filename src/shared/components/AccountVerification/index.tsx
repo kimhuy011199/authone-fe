@@ -72,7 +72,7 @@ const AccountVerification = () => {
               bg={'white'}
               variant={'outline'}
               onClick={handleSendRequest}
-              isDisabled={isLoading}
+              isDisabled={isLoading && !isOpen}
             >
               Verify account
             </Button>
@@ -87,7 +87,19 @@ const AccountVerification = () => {
         onClose={onClose}
         heading={'Account verification'}
         content={`Code is sent to ${user?.email}. Enter received code to verify your account.`}
-      />
+      >
+        <Flex gap={2}>
+          <Text>Don't received code?</Text>
+          <Button
+            isDisabled={isLoading}
+            variant={'link'}
+            colorScheme={'blue'}
+            onClick={handleSendRequest}
+          >
+            Resend
+          </Button>
+        </Flex>
+      </OtpModal>
     </>
   );
 };

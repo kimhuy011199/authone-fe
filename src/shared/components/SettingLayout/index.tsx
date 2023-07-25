@@ -16,7 +16,7 @@ const SettingLayout = (props: SettingLayoutProps) => {
           {title}
         </Text>
       </Box>
-      <Flex flexDir={'column'} gap={3} w={'100%'}>
+      <Flex flexDir={'column'} gap={4} w={'100%'}>
         {children}
       </Flex>
     </Flex>

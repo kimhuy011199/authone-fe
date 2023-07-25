@@ -1,4 +1,6 @@
+import { Children, ReactNode } from 'react';
 import {
+  Button,
   Flex,
   Modal,
   ModalBody,
@@ -17,10 +19,12 @@ interface OtpModalProps {
   onSubmit: (otp: string) => void;
   heading: string;
   content: string;
+  children?: ReactNode;
 }
 
 const OtpModal = (props: OtpModalProps) => {
-  const { isOpen, onClose, onSubmit, heading, content, isLoading } = props;
+  const { isOpen, onClose, onSubmit, heading, content, isLoading, children } =
+    props;
 
   return (
     <>
@@ -41,6 +45,7 @@ const OtpModal = (props: OtpModalProps) => {
             >
               <Text px={5}>{content}</Text>
               <OtpInput onSubmit={onSubmit} isLoading={isLoading} />
+              {children}
             </Flex>
           </ModalBody>
         </ModalContent>

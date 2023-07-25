@@ -33,7 +33,7 @@ type RegisterFormData = {
 const Regsiter = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { user, isLoading, error, message } = useAppSelector(
+  const { user, error, message } = useAppSelector(
     (state: RootState) => state.user
   );
 
@@ -143,7 +143,7 @@ const Regsiter = () => {
             </FormControl>
             <Button
               type="submit"
-              isDisabled={isSubmitting || isLoading}
+              isDisabled={isSubmitting}
               colorScheme={'blue'}
               variant={'solid'}
             >
