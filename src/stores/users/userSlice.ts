@@ -1,8 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { userType } from './userType';
 import userService, {
+  UpdatePasswordInputInterface,
+  UpdateUserInputInterface,
   UserInputInterface,
   VerifyMfaInputInterface,
+  VerifyPasswordInputInterface,
 } from './userService';
 import { UsersInterface } from '../../shared/models/User';
 
@@ -132,6 +135,71 @@ export const verifyEmail = createAsyncThunk(
   }
 );
 
+// Update user
+export const updateUser = createAsyncThunk(
+  `user/${userType.UPDATE_USER}`,
+  async (data: UpdateUserInputInterface, thunkAPI) => {
+    try {
+      return await userService.updateUser(data);
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+// Update password
+export const updatePassword = createAsyncThunk(
+  `user/${userType.UPDATE_PASSWORD}`,
+  async (data: UpdatePasswordInputInterface, thunkAPI) => {
+    try {
+      return await userService.updatePassword(data);
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+// Update avatar
+export const updateAvatar = createAsyncThunk(
+  `user/${userType.UPDATE_AVATAR}`,
+  async (base64Img: string | ArrayBuffer, thunkAPI) => {
+    try {
+      return await userService.updateAvatar(base64Img);
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+// Request reset password
+export const requestResetPassword = createAsyncThunk(
+  `user/${userType.REQUEST_RESET_PASSWORD}`,
+  async (email: string, thunkAPI) => {
+    try {
+      return await userService.requestResetPassword(email);
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+// Verify reset password
+export const verifyResetPassword = createAsyncThunk(
+  `user/${userType.VERIFY_RESET_PASSWORD}`,
+  async (input: VerifyPasswordInputInterface, thunkAPI) => {
+    try {
+      return await userService.verifyResetPassword(input);
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -252,6 +320,69 @@ export const userSlice = createSlice({
       .addCase(verifyEmail.rejected, (state, action: any) => {
         state.isLoading = false;
         state.error = userType.VERIFY_EMAIL;
+        state.message = action.payload.message;
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.success = userType.UPDATE_USER;
+        state.user = action.payload;
+      })
+      .addCase(updateUser.rejected, (state, action: any) => {
+        state.isLoading = false;
+        state.error = userType.UPDATE_USER;
+        state.message = action.payload.message;
+      })
+      .addCase(updatePassword.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updatePassword.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.success = userType.UPDATE_PASSWORD;
+        state.user = action.payload;
+      })
+      .addCase(updatePassword.rejected, (state, action: any) => {
+        state.isLoading = false;
+        state.error = userType.UPDATE_PASSWORD;
+        state.message = action.payload.message;
+      })
+      .addCase(updateAvatar.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateAvatar.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.success = userType.UPDATE_AVATAR;
+        state.user = action.payload;
+      })
+      .addCase(updateAvatar.rejected, (state, action: any) => {
+        state.isLoading = false;
+        state.error = userType.UPDATE_AVATAR;
+        state.message = action.payload.message;
+      })
+      .addCase(requestResetPassword.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(requestResetPassword.fulfilled, (state) => {
+        state.isLoading = false;
+        state.success = userType.REQUEST_RESET_PASSWORD;
+      })
+      .addCase(requestResetPassword.rejected, (state, action: any) => {
+        state.isLoading = false;
+        state.error = userType.REQUEST_RESET_PASSWORD;
+        state.message = action.payload.message;
+      })
+      .addCase(verifyResetPassword.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(verifyResetPassword.fulfilled, (state) => {
+        state.isLoading = false;
+        state.success = userType.VERIFY_RESET_PASSWORD;
+      })
+      .addCase(verifyResetPassword.rejected, (state, action: any) => {
+        state.isLoading = false;
+        state.error = userType.VERIFY_RESET_PASSWORD;
         state.message = action.payload.message;
       });
   },

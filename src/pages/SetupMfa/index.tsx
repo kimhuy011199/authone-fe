@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from '../../stores/hook';
 import { RootState } from '../../stores';
 import { getQRCode, toggleMfa } from '../../stores/users/userSlice';
 import OtpInput from '../../shared/components/OtpInput';
+import Loading from '../../shared/components/Loading';
 
 const SetupMfa = () => {
   const dispatch = useAppDispatch();
@@ -64,6 +65,10 @@ const SetupMfa = () => {
       handleShowEnabledModal();
     }
   }, [user?.isEnabledMfa]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>

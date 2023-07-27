@@ -13,6 +13,7 @@ import { useAppDispatch } from '../../stores/hook';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { requestResetPassword } from '../../stores/users/userSlice';
 
 type EmailFormData = {
   email: string;
@@ -37,9 +38,12 @@ const ForgotPassword = () => {
 
   const onSubmit: SubmitHandler<EmailFormData> = async (values) => {
     try {
-      // const data = await dispatch(loginUser(values)).unwrap();
-      console.log(values);
-    } catch (error: any) {}
+      await dispatch(requestResetPassword(values.email)).unwrap();
+    } catch (error: any) {
+      errorToast({
+        description: error.message,
+      });
+    }
   };
 
   return (
@@ -63,8 +67,8 @@ const ForgotPassword = () => {
         >
           <Heading fontSize={'3xl'}>Reset your password</Heading>
           <Text pb={3} color={'gray.600'}>
-            Please enter your email address below and we will send you your new
-            password.
+            Please enter your email address below and we will send you
+            instructions on how to reset your password.
           </Text>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={4} w={80}>

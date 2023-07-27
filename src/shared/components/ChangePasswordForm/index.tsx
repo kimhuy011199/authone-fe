@@ -12,6 +12,7 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { useErrorToast, useSuccessToast } from '../../hooks/useAppToast';
+import { updatePassword } from '../../../stores/users/userSlice';
 
 type ChangePasswordFormData = {
   oldPassword: string;
@@ -53,18 +54,18 @@ const ChangePasswordForm = (props: ChangePasswordFormProps) => {
 
   const onSubmit: SubmitHandler<ChangePasswordFormData> = async (values) => {
     try {
-      console.log('values', values);
-      // await dispatch(changePassword(values)).unwrap();
+      const { confirmPassword, ...data } = values;
+      await dispatch(updatePassword(data)).unwrap();
       successToast({
         title: 'Password updated',
         description: 'Your password has been changed!',
       });
+      onClose();
     } catch (error: any) {
       errorToast({
         description: error.message,
       });
     }
-    onClose();
   };
 
   const handleCancel = () => {

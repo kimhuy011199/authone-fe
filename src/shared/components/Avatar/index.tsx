@@ -1,11 +1,19 @@
 import { useState } from 'react';
 import { Box, Button, Image, Input } from '@chakra-ui/react';
-import { useErrorToast } from '../../hooks/useAppToast';
+import { useErrorToast, useSuccessToast } from '../../hooks/useAppToast';
+import { updateAvatar } from '../../../stores/users/userSlice';
+import { useAppDispatch, useAppSelector } from '../../../stores/hook';
+import { RootState } from '../../../stores';
 
 const FILE_SIZE_MAX = 200000;
 
 const Avatar = () => {
+  const { user, isLoading, error } = useAppSelector(
+    (state: RootState) => state.user
+  );
+  const dispatch = useAppDispatch();
   const errorToast = useErrorToast();
+  const successToast = useSuccessToast();
   const [inputValue, setInputValue] = useState('');
   const [previewImgSrc, setPreviewImgSrc] = useState('');
   const [selectedFile, setSelectedFile] = useState<any>();
@@ -45,12 +53,24 @@ const Avatar = () => {
 
   const uploadImage = async (base64EncodedImage: string | ArrayBuffer) => {
     try {
-      // const data = await dispatch(uploadImg({ data: base64EncodedImage }));
-      console.log(base64EncodedImage);
+      await dispatch(updateAvatar(base64EncodedImage));
       setInputValue('');
-      // previewImgSrc(data)
-    } catch (err) {}
+      setPreviewImgSrc('');
+      successToast({
+        title: 'Avatar updated',
+        description: 'Your avatar has been updated!',
+      });
+    } catch (error: any) {
+      errorToast({
+        description: error.message,
+      });
+    }
   };
+
+  const avatarSrc =
+    previewImgSrc ||
+    user?.avatar ||
+    'https://res.cloudinary.com/cloudinaryassets/image/upload/v1633613052/avatar-male_rdymxf.png';
 
   return (
     <Box pos={'relative'} w={'fit-content'} ml={2} h={36}>
@@ -63,11 +83,7 @@ const Avatar = () => {
           minH={28}
           minW={28}
           transform={'translate(-50%, -50%)'}
-          src={
-            previewImgSrc
-              ? previewImgSrc
-              : 'https://res.cloudinary.com/cloudinaryassets/image/upload/v1633613052/avatar-male_rdymxf.png'
-          }
+          src={avatarSrc}
         />
         <Input
           type={'file'}
@@ -89,8 +105,12 @@ const Avatar = () => {
           transform={'translate(-50%, -50%)'}
           onClick={handleSubmitFile}
           colorScheme={'blue'}
-          variant={'outline'}
-          bg={'white'}
+          variant={'solid'}
+          isLoading={isLoading}
+          _loading={{
+            backgroundColor: 'blue.500',
+            opacity: 1,
+          }}
         >
           Save
         </Button>

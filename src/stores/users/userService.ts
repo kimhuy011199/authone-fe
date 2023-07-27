@@ -14,6 +14,20 @@ export interface VerifyMfaInputInterface {
   mfaToken: string;
 }
 
+export interface UpdatePasswordInputInterface {
+  password: string;
+  oldPassword: string;
+}
+
+export interface UpdateUserInputInterface {
+  name: string;
+}
+
+export interface VerifyPasswordInputInterface {
+  passwordToken: string;
+  password: string;
+}
+
 // Register user
 const registerUser = async (input: UserInputInterface) => {
   const data = await apiService.post(`${endpoint}/register`, input);
@@ -73,6 +87,41 @@ const verifyEmail = async (otp: string) => {
   return data.user;
 };
 
+// Update user
+const updateUser = async (input: UpdateUserInputInterface) => {
+  const data = await apiService.put(`${endpoint}/update-user`, input);
+  return data.user;
+};
+
+// Update password
+const updatePassword = async (input: UpdatePasswordInputInterface) => {
+  const data = await apiService.put(`${endpoint}/update-password`, input);
+  return data.user;
+};
+
+// Update avatar
+const updateAvatar = async (base64Img: string | ArrayBuffer) => {
+  const data = await apiService.put(`${endpoint}/update-avatar`, { base64Img });
+  return data.user;
+};
+
+// Request reset password
+const requestResetPassword = async (email: string) => {
+  const data = await apiService.post(`${endpoint}/request-reset-password`, {
+    email,
+  });
+  return data.user;
+};
+
+// Verify reset password
+const verifyResetPassword = async (input: VerifyPasswordInputInterface) => {
+  const data = await apiService.post(
+    `${endpoint}/verify-reset-password`,
+    input
+  );
+  return data.user;
+};
+
 const userService = {
   registerUser,
   loginUser,
@@ -83,6 +132,11 @@ const userService = {
   verifyMfa,
   sendVerifyEmail,
   verifyEmail,
+  updateUser,
+  updatePassword,
+  updateAvatar,
+  requestResetPassword,
+  verifyResetPassword,
 };
 
 export default userService;

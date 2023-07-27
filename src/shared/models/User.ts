@@ -4,4 +4,5 @@ export interface UsersInterface {
   name: string;
   isEnabledMfa: boolean;
   isVerifiedEmail: boolean;
+  avatar: string;
 }
