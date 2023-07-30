@@ -7,6 +7,7 @@ import {
   FormControl,
   Input,
   FormErrorMessage,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useErrorToast } from '../../shared/hooks/useAppToast';
 import { useAppDispatch } from '../../stores/hook';
@@ -14,12 +15,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { requestResetPassword } from '../../stores/users/userSlice';
+import SuccessModal from '../../shared/components/SuccessModal';
+import Logo from '../../shared/components/Logo';
 
 type EmailFormData = {
   email: string;
 };
 
 const ForgotPassword = () => {
+  const { isOpen, onOpen } = useDisclosure();
   const dispatch = useAppDispatch();
   const errorToast = useErrorToast();
 
@@ -39,6 +43,7 @@ const ForgotPassword = () => {
   const onSubmit: SubmitHandler<EmailFormData> = async (values) => {
     try {
       await dispatch(requestResetPassword(values.email)).unwrap();
+      onOpen();
     } catch (error: any) {
       errorToast({
         description: error.message,
@@ -65,6 +70,7 @@ const ForgotPassword = () => {
           maxW={80}
           w={'100%'}
         >
+          <Logo />
           <Heading fontSize={'3xl'}>Reset your password</Heading>
           <Text pb={3} color={'gray.600'}>
             Please enter your email address below and we will send you
@@ -95,6 +101,12 @@ const ForgotPassword = () => {
           </form>
         </Flex>
       </Flex>
+      <SuccessModal
+        isOpen={isOpen}
+        content={
+          'Sent instructions successfully! Go to your mail inbox and get started.'
+        }
+      />
     </>
   );
 };

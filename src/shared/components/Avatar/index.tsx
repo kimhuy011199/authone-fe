@@ -4,13 +4,12 @@ import { useErrorToast, useSuccessToast } from '../../hooks/useAppToast';
 import { updateAvatar } from '../../../stores/users/userSlice';
 import { useAppDispatch, useAppSelector } from '../../../stores/hook';
 import { RootState } from '../../../stores';
+import logo from '../../../assets/logo.svg';
 
-const FILE_SIZE_MAX = 200000;
+const FILE_SIZE_MAX = 200000; // 200kb
 
 const Avatar = () => {
-  const { user, isLoading, error } = useAppSelector(
-    (state: RootState) => state.user
-  );
+  const { user, isLoading } = useAppSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
   const errorToast = useErrorToast();
   const successToast = useSuccessToast();
@@ -26,7 +25,7 @@ const Avatar = () => {
       }
       if (file.size >= FILE_SIZE_MAX) {
         return errorToast({
-          description: 'File size larger than 20MB!',
+          description: 'File size larger than 200kb!',
         });
       }
 
@@ -67,14 +66,19 @@ const Avatar = () => {
     }
   };
 
-  const avatarSrc =
-    previewImgSrc ||
-    user?.avatar ||
-    'https://res.cloudinary.com/cloudinaryassets/image/upload/v1633613052/avatar-male_rdymxf.png';
+  const avatarSrc = previewImgSrc || user?.avatar;
 
   return (
     <Box pos={'relative'} w={'fit-content'} ml={2} h={36}>
-      <Box pos={'relative'} w={28} h={28} rounded={'full'} overflow={'hidden'}>
+      <Box
+        pos={'relative'}
+        w={28}
+        h={28}
+        rounded={'full'}
+        overflow={'hidden'}
+        border={'1px'}
+        borderColor={'gray.200'}
+      >
         <Image
           pos={'absolute'}
           top={'50%'}
@@ -83,7 +87,8 @@ const Avatar = () => {
           minH={28}
           minW={28}
           transform={'translate(-50%, -50%)'}
-          src={avatarSrc}
+          src={avatarSrc || logo}
+          p={!avatarSrc ? 4 : 0}
         />
         <Input
           type={'file'}

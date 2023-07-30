@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
 import { Flex, Heading, Text, Button } from '@chakra-ui/react';
+import Logo from '../../../shared/components/Logo';
 
 const Unauthenticated = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const Unauthenticated = () => {
         w={'100%'}
         maxW={'3xl'}
       >
+        <Logo />
         <Heading fontSize={'6xl'} as={'h1'} fontWeight={'bold'}>
           The Future Of{' '}
           <Text as={'span'} color={'blue.500'}>

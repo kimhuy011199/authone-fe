@@ -1,29 +1,23 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 import {
   Box,
-  Button,
   Flex,
   Heading,
   Image,
-  Modal,
-  ModalBody,
-  ModalOverlay,
-  ModalContent,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { CheckCircleIcon } from '@chakra-ui/icons';
 import { useErrorToast } from '../../shared/hooks/useAppToast';
 import { useAppDispatch, useAppSelector } from '../../stores/hook';
 import { RootState } from '../../stores';
 import { getQRCode, toggleMfa } from '../../stores/users/userSlice';
 import OtpInput from '../../shared/components/OtpInput';
 import Loading from '../../shared/components/Loading';
+import SuccessModal from '../../shared/components/SuccessModal';
+import Logo from '../../shared/components/Logo';
 
 const SetupMfa = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { isOpen, onOpen } = useDisclosure();
   const { user, isLoading } = useAppSelector((state: RootState) => state.user);
   const [qrCode, setQrCode] = useState('');
@@ -52,10 +46,6 @@ const SetupMfa = () => {
         description: error.message,
       });
     }
-  };
-
-  const handleNavigateToHome = () => {
-    navigate('/');
   };
 
   useEffect(() => {
@@ -89,6 +79,7 @@ const SetupMfa = () => {
           maxW={'xl'}
           w={'100%'}
         >
+          <Logo />
           <Heading fontSize={'3xl'}>Set up multifactor authentication</Heading>
           <Text fontSize={'lg'} color={'gray.600'}>
             Enable multifactor authentication and increase your account
@@ -109,34 +100,12 @@ const SetupMfa = () => {
           />
         </Flex>
       </Flex>
-      <Modal isOpen={isOpen} onClose={() => {}} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalBody>
-            <Flex
-              flexDir={'column'}
-              justifyContent={'center'}
-              alignItems={'center'}
-              textAlign={'center'}
-              gap={5}
-              py={8}
-            >
-              <CheckCircleIcon w={12} h={12} color="green.500" />
-              <Text px={5}>
-                Enabled multifactor authentication successfully! Go to homepage
-                and enjoy our cool features.
-              </Text>
-              <Button
-                variant={'outline'}
-                colorScheme={'blue'}
-                onClick={handleNavigateToHome}
-              >
-                Go to homepage
-              </Button>
-            </Flex>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      <SuccessModal
+        isOpen={isOpen}
+        content={
+          'Enabled multifactor authentication successfully! Go to homepage and enjoy our cool features.'
+        }
+      />
     </>
   );
 };
