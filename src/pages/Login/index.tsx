@@ -90,6 +90,10 @@ const Login = () => {
     }
   }, [user]);
 
+  if (user) {
+    return null;
+  }
+
   return (
     <>
       <Grid templateColumns="repeat(2, 1fr)" minH={'100vh'}>

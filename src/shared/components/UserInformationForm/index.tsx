@@ -28,9 +28,7 @@ const UserInformationForm = (props: UserInformationFormProps) => {
   const errorToast = useErrorToast();
   const successToast = useSuccessToast();
   const dispatch = useAppDispatch();
-  const { user, isLoading, error } = useAppSelector(
-    (state: RootState) => state.user
-  );
+  const { user } = useAppSelector((state: RootState) => state.user);
 
   const schema = yup.object().shape({
     name: yup.string().required('Name is required'),

@@ -72,6 +72,10 @@ const Regsiter = () => {
     }
   }, [user]);
 
+  if (user) {
+    return null;
+  }
+
   return (
     <Grid templateColumns="repeat(2, 1fr)" minH={'100vh'}>
       <Flex justify={'center'} direction={'column'} mx={'auto'} gap={2}>

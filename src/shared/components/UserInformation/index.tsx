@@ -8,9 +8,7 @@ import UserInformationForm from '../UserInformationForm';
 import Avatar from '../Avatar';
 
 const UserInformation = () => {
-  const { user, isLoading, error } = useAppSelector(
-    (state: RootState) => state.user
-  );
+  const { user } = useAppSelector((state: RootState) => state.user);
   const [showForm, setShowForm] = useState(false);
 
   const handleShowForm = () => {

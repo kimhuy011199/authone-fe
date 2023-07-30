@@ -29,7 +29,6 @@ const NewPassword = () => {
   const [searchParams] = useSearchParams();
 
   const passwordToken = searchParams.get('pt');
-  console.log(passwordToken);
 
   const errorToast = useErrorToast();
   const dispatch = useAppDispatch();

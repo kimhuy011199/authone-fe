@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './stores/hook';
 import { RootState } from './stores';
@@ -11,17 +11,30 @@ import NotFound from './pages/NotFound';
 import ForgotPassword from './pages/ForgotPassword';
 import SetupMfa from './pages/SetupMfa';
 import NewPassword from './pages/NewPassword';
+import Loading from './shared/components/Loading';
 
 const App = () => {
   const accessToken = authStorageService().getToken();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state: RootState) => state.user);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleGetUser = async () => {
+    try {
+      if (accessToken && !user?.email) {
+        await dispatch(getMe()).unwrap();
+      }
+    } catch (error) {}
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    if (accessToken && !user?.email) {
-      dispatch(getMe());
-    }
+    handleGetUser();
   }, [user, dispatch, accessToken]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <Routes>

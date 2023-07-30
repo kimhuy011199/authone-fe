@@ -7,6 +7,7 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import { useErrorToast } from '../../shared/hooks/useAppToast';
 import { useAppDispatch, useAppSelector } from '../../stores/hook';
 import { RootState } from '../../stores';
@@ -18,6 +19,7 @@ import Logo from '../../shared/components/Logo';
 
 const SetupMfa = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { isOpen, onOpen } = useDisclosure();
   const { user, isLoading } = useAppSelector((state: RootState) => state.user);
   const [qrCode, setQrCode] = useState('');
@@ -55,6 +57,12 @@ const SetupMfa = () => {
       handleShowEnabledModal();
     }
   }, [user?.isEnabledMfa]);
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/');
+    }
+  }, [user]);
 
   if (isLoading) {
     return <Loading />;
